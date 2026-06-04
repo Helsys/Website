@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Helsys">
+  <!-- Brand teal rounded tile with a capital H drawn as pure geometry (two
+       stems plus a crossbar) so it stays crisp at any size and does not depend
+       on a font being installed. The wordmark is now set in Cascadia Mono, a
+       monospace with flat, squared terminals, so the H uses butt caps (not
+       round) and a slightly heavier, even stroke to echo that technical
+       SemiBold character. -->
+  <rect width="64" height="64" rx="14" fill="#0a6b6e"/>
+  <g fill="none" stroke="#fbfbf9" stroke-width="7" stroke-linecap="butt" stroke-linejoin="miter">
+    <!-- left stem -->
+    <path d="M20 16 V48"/>
+    <!-- right stem -->
+    <path d="M44 16 V48"/>
+    <!-- crossbar -->
+    <path d="M20 32 H44"/>
+  </g>
+</svg>

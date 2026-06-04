@@ -1,0 +1,57 @@
+---
+import { getContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getContent(lang);
+---
+
+<section id="about" class="section about" aria-labelledby="about-title">
+  <div class="container about-grid">
+    <div class="about-aside">
+      <p class="section-label reveal">{t.about.sectionLabel}</p>
+    </div>
+    <div class="about-body">
+      <h2 id="about-title" class="about-title reveal">{t.about.title}</h2>
+      {t.about.paragraphs.map((p, i) => (
+        <p class="about-text reveal" style={`--reveal-delay: ${0.05 + i * 0.05}s`}>{p}</p>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .about-body {
+    max-width: var(--measure);
+  }
+
+  .about-title {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-m);
+  }
+
+  .about-text {
+    font-size: var(--step-1);
+    color: var(--color-ink-soft);
+    line-height: 1.6;
+  }
+
+  .about-text + .about-text {
+    margin-top: var(--space-s);
+  }
+
+  @media (min-width: 56rem) {
+    .about-grid {
+      grid-template-columns: 14rem 1fr;
+      gap: var(--space-xl);
+    }
+  }
+</style>

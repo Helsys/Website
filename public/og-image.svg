@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Helsys, Joris Helsen">
+  <defs>
+    <radialGradient id="glow" cx="26%" cy="24%" r="62%">
+      <stop offset="0%" stop-color="#0a6b6e" stop-opacity="0.14"/>
+      <stop offset="70%" stop-color="#0a6b6e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Flat premium paper ground with one soft teal glow. No photo, no noise. -->
+  <rect width="1200" height="630" fill="#fbfbf9"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Wordmark: "Helsys" (capital H) in the brand face (Cascadia Mono SemiBold)
+       with a teal brand dot. Monospace, so slightly tighter tracking. -->
+  <g font-family="'Cascadia Mono Helsys','Cascadia Mono','Cascadia Code',ui-monospace,Consolas,monospace" style="font-feature-settings:'calt' 0,'liga' 0,'dlig' 0;font-variant-ligatures:none;">
+    <text x="88" y="172" font-size="54" font-weight="600" letter-spacing="-1.5" fill="#16171a">Helsys<tspan fill="#0a6b6e">.</tspan></text>
+    <text x="86" y="346" font-size="96" font-weight="700" letter-spacing="-3" fill="#16171a" font-family="-apple-system,'Segoe UI',system-ui,sans-serif">Joris Helsen</text>
+    <text x="90" y="424" font-size="44" font-weight="500" letter-spacing="-1" fill="#44474d" font-family="-apple-system,'Segoe UI',system-ui,sans-serif">Ik help KMO&#8217;s digitaliseren.</text>
+    <text x="90" y="560" font-size="28" font-weight="500" fill="#0a6b6e" font-family="-apple-system,'Segoe UI',system-ui,sans-serif">Odoo &#183; Python &#183; .NET &#183; Microsoft Azure</text>
+  </g>
+</svg>

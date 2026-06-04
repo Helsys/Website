@@ -1,0 +1,163 @@
+---
+import { getContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getContent(lang);
+---
+
+<section id="services" class="section services" aria-labelledby="services-title">
+  <div class="container">
+    <p class="section-label reveal">{t.services.sectionLabel}</p>
+    <h2 id="services-title" class="services-title reveal">{t.services.title}</h2>
+    <p class="services-intro reveal" style="--reveal-delay: 0.05s">{t.services.intro}</p>
+
+    <ol class="services-list" role="list">
+      {t.services.items.map((item, i) => (
+        <li class="service-card reveal" style={`--reveal-delay: ${i * 0.07}s`}>
+          <span class="service-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div class="service-content">
+            <h3 class="service-title">{item.title}</h3>
+            <p class="service-body">{item.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div class="tech reveal">
+      <p class="tech-label">{t.services.techLabel}</p>
+      <ul class="tech-list" role="list">
+        {t.services.tech.map((tech) => (
+          <li class="tech-item">{tech}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .services-title {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-m);
+    max-width: 18ch;
+  }
+
+  .services-intro {
+    font-size: var(--step-1);
+    color: var(--color-ink-soft);
+    max-width: var(--measure);
+    margin-bottom: var(--space-xl);
+  }
+
+  .services-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .service-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-m);
+    padding-block: var(--space-l);
+    border-top: var(--border);
+    transition: background-color 0.3s var(--ease-out);
+  }
+
+  .service-card:last-child {
+    border-bottom: var(--border);
+  }
+
+  .service-index {
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink-faint);
+    font-weight: 500;
+    padding-top: 0.4rem;
+  }
+
+  /* In light the index numerals take the brand teal, so the list reads as a
+     branded sequence. Dark keeps its faint grey numerals unchanged. */
+  :global(html[data-theme='light']) .service-index {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  /* A whisper of teal wash on hover, light only, to make the row feel alive
+     without a heavy hover state. */
+  :global(html[data-theme='light']) .service-card:hover {
+    background-color: var(--color-surface-tint);
+  }
+
+  .service-title {
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-2xs);
+  }
+
+  .service-body {
+    font-size: var(--step-0);
+    color: var(--color-ink-soft);
+    max-width: var(--measure);
+    line-height: 1.6;
+  }
+
+  .tech {
+    margin-top: var(--space-xl);
+  }
+
+  .tech-label {
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    font-weight: 500;
+    margin-bottom: var(--space-s);
+  }
+
+  .tech-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .tech-item {
+    font-size: var(--step--1);
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+    border: var(--border);
+    border-radius: 999px;
+    background: var(--color-bg-elevated);
+    color: var(--color-ink);
+    transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out),
+      background-color 0.2s var(--ease-out);
+  }
+
+  /* Light: soft teal tinted chips with a teal hairline, so the tech stack reads
+     as a cluster of brand tokens. Dark stays on its neutral elevated surface. */
+  :global(html[data-theme='light']) .tech-item {
+    background: var(--color-surface-tint);
+    border-color: var(--color-line-strong);
+  }
+
+  :global(html[data-theme='light']) .tech-item:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  @media (min-width: 48rem) {
+    .service-card {
+      grid-template-columns: 4rem 1fr;
+      gap: var(--space-xl);
+    }
+  }
+</style>

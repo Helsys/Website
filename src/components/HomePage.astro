@@ -1,0 +1,32 @@
+---
+// Shared page composition for both locales. Each language route renders this
+// with its own lang prop, so the structure stays identical and the copy comes
+// entirely from the content dictionary.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from './SiteHeader.astro';
+import Hero from './Hero.astro';
+import About from './About.astro';
+import Services from './Services.astro';
+import Certifications from './Certifications.astro';
+import Contact from './Contact.astro';
+import SiteFooter from './SiteFooter.astro';
+import type { Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<BaseLayout lang={lang}>
+  <SiteHeader lang={lang} />
+  <main id="main">
+    <Hero lang={lang} />
+    <About lang={lang} />
+    <Services lang={lang} />
+    <Certifications lang={lang} />
+    <Contact lang={lang} />
+  </main>
+  <SiteFooter lang={lang} />
+</BaseLayout>

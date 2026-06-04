@@ -1,0 +1,262 @@
+---
+import { getContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getContent(lang);
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href={lang === 'nl' ? '/' : '/en/'} aria-label={t.siteName}>
+      <span class="brand-mark">Helsys<span class="brand-dot" aria-hidden="true">.</span></span>
+    </a>
+
+    <nav class="nav" aria-label={lang === 'nl' ? 'Hoofdnavigatie' : 'Main navigation'}>
+      <a href="#about">{t.nav.about}</a>
+      <a href="#services">{t.nav.services}</a>
+      <a href="#certifications">{t.nav.certifications}</a>
+      <a href="#contact">{t.nav.contact}</a>
+    </nav>
+
+    <div class="header-actions">
+      <button
+        class="theme-toggle"
+        type="button"
+        data-theme-toggle
+        aria-label={t.theme.toggleLabel}
+        title={t.theme.toggleLabel}
+        data-label-light={t.theme.toLight}
+        data-label-dark={t.theme.toDark}
+      >
+        <!-- Sun (shown in dark mode: tap to go light). -->
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2"></circle>
+          <path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"></path>
+        </svg>
+        <!-- Moon (shown in light mode: tap to go dark). -->
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 14.2A8 8 0 1 1 9.8 4 6.4 6.4 0 0 0 20 14.2Z"></path>
+        </svg>
+      </button>
+
+      <a class="lang-switch" href={t.otherLangPath} hreflang={lang === 'nl' ? 'en' : 'nl'}>
+        <span class="visually-hidden">{t.langSwitchLabel}: </span>
+        {t.otherLangName}
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Runtime theme toggle. The initial theme is already applied before paint by
+  // the inline script in BaseLayout; this only handles user clicks: flip the
+  // attribute, persist the choice, keep the meta theme-color in sync, and
+  // reflect state on the button for assistive tech.
+  const root = document.documentElement;
+  const toggle = document.querySelector('[data-theme-toggle]');
+  const meta = document.querySelector('meta[name="theme-color"]');
+
+  function syncToggle(theme: string) {
+    if (!toggle) return;
+    const isDark = theme === 'dark';
+    // aria-pressed: pressed means dark is active.
+    toggle.setAttribute('aria-pressed', String(isDark));
+    // The label always describes the action the button performs next.
+    const next = isDark ? toggle.getAttribute('data-label-light') : toggle.getAttribute('data-label-dark');
+    if (next) {
+      toggle.setAttribute('aria-label', next);
+      toggle.setAttribute('title', next);
+    }
+  }
+
+  if (toggle) {
+    // Dark is the baseline, so an unset attribute means dark.
+    const current = root.getAttribute('data-theme') || 'dark';
+    syncToggle(current);
+
+    toggle.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme', next);
+      } catch (e) {
+        /* storage blocked: the choice still applies for this page view */
+      }
+      if (meta) meta.setAttribute('content', next === 'dark' ? '#131316' : '#f6f8f7');
+      syncToggle(next);
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-line) 60%, transparent);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    min-height: 4.25rem;
+  }
+
+  /* Wordmark. Set in Cascadia Mono SemiBold via --font-brand (self-hosted,
+     one weight, subset to the six glyphs used) with monospace system
+     fallbacks. Capital H, the rest lowercase, to match the logotype. A single
+     teal dot carries the brand accent. The mark inherits the ink colour and so
+     flips cleanly between light and dark.
+     Monospace runs wider and more technical than a proportional face, so we
+     dial the size back a notch (step-0, not step-1) and pull the tracking in
+     slightly so the mark reads as a compact, balanced logotype beside the nav
+     rather than a wide block of code. Ligatures and contextual alternates are
+     disabled outright; "Helsys" never triggers them, but this guarantees the
+     letters always render as clean, discrete glyphs. */
+  .brand-mark {
+    font-family: var(--font-brand);
+    font-weight: 600;
+    font-size: var(--step-0);
+    letter-spacing: -0.02em;
+    font-feature-settings: 'calt' 0, 'liga' 0, 'dlig' 0;
+    font-variant-ligatures: none;
+    color: var(--color-ink);
+  }
+
+  .brand-dot {
+    color: var(--color-accent);
+  }
+
+  .nav {
+    display: none;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    font-size: var(--step--1);
+    color: var(--color-ink-soft);
+  }
+
+  .nav a {
+    position: relative;
+    padding-block: 0.25rem;
+    transition: color 0.2s var(--ease-out);
+  }
+
+  .nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  /* Light: nav hover and its underline take the brand teal, so navigation
+     feels branded. Dark keeps the crisp ink hover the user likes. */
+  :global(html[data-theme='light']) .nav a:hover {
+    color: var(--color-accent);
+  }
+
+  :global(html[data-theme='light']) .nav a::after {
+    background: var(--color-accent);
+  }
+
+  .nav a:hover {
+    color: var(--color-ink);
+  }
+
+  .nav a:hover::after {
+    transform: scaleX(1);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  .lang-switch {
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+  }
+
+  .lang-switch:hover {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  /* Light: the pill controls (language switch, theme toggle) pick up teal on
+     hover for a consistent branded interaction. Dark keeps its ink hover. */
+  :global(html[data-theme='light']) .lang-switch:hover,
+  :global(html[data-theme='light']) .theme-toggle:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    padding: 0;
+    color: var(--color-ink-soft);
+    background: transparent;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
+      background-color 0.2s var(--ease-out);
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  /* The two icons share the same cell; only one shows per theme. The moon
+     invites switching to dark (so it shows in light mode) and the sun invites
+     switching to light (so it shows in dark mode). Dark is now the baseline, so
+     the default (no attribute set: no-JS and pre-paint) shows the sun, matching
+     the dark ground. Only an explicit light choice shows the moon. */
+  .theme-toggle svg {
+    grid-area: 1 / 1;
+  }
+
+  .icon-sun {
+    display: block;
+  }
+
+  .icon-moon {
+    display: none;
+  }
+
+  :global(html[data-theme='light']) .icon-sun {
+    display: none;
+  }
+
+  :global(html[data-theme='light']) .icon-moon {
+    display: block;
+  }
+
+  @media (min-width: 48rem) {
+    .nav {
+      display: flex;
+    }
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+import { getContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getContent(lang);
+---
+
+<section id="contact" class="section contact" aria-labelledby="contact-title">
+  <div class="container contact-inner">
+    <p class="section-label reveal">{t.contact.sectionLabel}</p>
+    <h2 id="contact-title" class="contact-title reveal" style="--reveal-delay: 0.05s">{t.contact.title}</h2>
+    <p class="contact-intro reveal" style="--reveal-delay: 0.1s">{t.contact.intro}</p>
+
+    <ul class="contact-links reveal" role="list" style="--reveal-delay: 0.15s">
+      <li>
+        <span class="contact-link-label">{t.contact.emailLabel}</span>
+        <a class="contact-link" href={`mailto:${t.contact.email}`}>{t.contact.email}</a>
+      </li>
+      <li>
+        <span class="contact-link-label">{t.contact.linkedinLabel}</span>
+        <a class="contact-link" href={t.contact.linkedinUrl} target="_blank" rel="noopener noreferrer">
+          linkedin.com/in/jorishelsen
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .contact-inner {
+    max-width: 46rem;
+  }
+
+  .contact-title {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-m);
+  }
+
+  .contact-intro {
+    font-size: var(--step-1);
+    color: var(--color-ink-soft);
+    max-width: 46ch;
+    margin-bottom: var(--space-xl);
+  }
+
+  .contact-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 40rem) {
+    .contact-links {
+      grid-template-columns: repeat(2, minmax(0, max-content));
+      gap: var(--space-3xl);
+    }
+  }
+
+  .contact-links li {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .contact-link-label {
+    font-size: var(--step--1);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    font-weight: 500;
+  }
+
+  .contact-link {
+    font-size: var(--step-1);
+    font-weight: 500;
+    color: var(--color-ink);
+    width: fit-content;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+  }
+
+  .contact-link:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+</style>

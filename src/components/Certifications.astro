@@ -1,0 +1,117 @@
+---
+import { getContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getContent(lang);
+---
+
+<section id="certifications" class="section certifications" aria-labelledby="cert-title">
+  <div class="container">
+    <p class="section-label reveal">{t.certifications.sectionLabel}</p>
+    <h2 id="cert-title" class="cert-title reveal">{t.certifications.title}</h2>
+    <p class="cert-intro reveal" style="--reveal-delay: 0.05s">{t.certifications.intro}</p>
+
+    <ul class="cert-list" role="list">
+      {t.certifications.items.map((item, i) => (
+        <li class="cert-card reveal" style={`--reveal-delay: ${i * 0.06}s`}>
+          <div class="cert-top">
+            <span class="cert-issuer">{item.issuer}</span>
+            <span class="cert-year">{item.year}</span>
+          </div>
+          <p class="cert-name">{item.name}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .cert-title {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-m);
+  }
+
+  .cert-intro {
+    font-size: var(--step-1);
+    color: var(--color-ink-soft);
+    max-width: var(--measure);
+    margin-bottom: var(--space-xl);
+  }
+
+  .cert-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+  }
+
+  .cert-card {
+    padding: var(--space-l);
+    border: var(--border);
+    border-radius: var(--radius);
+    background: var(--color-bg-elevated);
+    transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out),
+      border-color 0.35s var(--ease-out);
+  }
+
+  .cert-card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--color-accent) 35%, var(--color-line));
+    box-shadow: 0 14px 40px -24px rgba(22, 23, 26, 0.35);
+  }
+
+  /* Light: cards sit on a soft teal tinted paper with a teal hairline, and a
+     thin teal keyline on the left marks them as branded surfaces. The hover
+     shadow picks up a teal cast. Dark cards are unchanged. */
+  :global(html[data-theme='light']) .cert-card {
+    background: var(--color-surface-tint);
+    border-color: var(--color-line-strong);
+    border-left: 2px solid var(--color-accent);
+  }
+
+  :global(html[data-theme='light']) .cert-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 16px 44px -24px color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+
+  .cert-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+    margin-bottom: var(--space-s);
+  }
+
+  .cert-issuer {
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .cert-year {
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink-faint);
+  }
+
+  .cert-name {
+    font-size: var(--step-1);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+  }
+
+  @media (min-width: 40rem) {
+    .cert-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

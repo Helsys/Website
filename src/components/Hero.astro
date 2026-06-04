@@ -1,0 +1,119 @@
+---
+import { getContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getContent(lang);
+---
+
+<section class="hero">
+  <div class="container hero-inner">
+    <p class="hero-eyebrow reveal">{t.hero.eyebrow}</p>
+    <h1 class="hero-title reveal" style="--reveal-delay: 0.05s">
+      {t.hero.name}<span class="hero-sep">.</span>
+    </h1>
+    <p class="hero-headline reveal" style="--reveal-delay: 0.1s">{t.hero.headline}</p>
+    <p class="hero-intro reveal" style="--reveal-delay: 0.15s">{t.hero.intro}</p>
+
+    <div class="hero-actions reveal" style="--reveal-delay: 0.2s">
+      <a class="btn btn-primary" href="#contact">{t.hero.ctaPrimary}</a>
+      <a class="btn btn-secondary" href="#services">{t.hero.ctaSecondary}</a>
+    </div>
+
+    <p class="hero-location reveal" style="--reveal-delay: 0.25s">
+      <span class="dot" aria-hidden="true"></span>
+      {t.hero.location}
+    </p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: clamp(5rem, 14vh, 9rem) var(--space-2xl);
+    overflow: hidden;
+  }
+
+  /* A single, very soft radial glow. Restraint: it suggests depth without
+     ever competing with the type. */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 60vh;
+    background: radial-gradient(
+      60% 60% at 30% 20%,
+      color-mix(in srgb, var(--color-accent) var(--glow-strength, 9%), transparent),
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .hero-inner {
+    max-width: 56rem;
+  }
+
+  .hero-eyebrow {
+    font-size: var(--step--1);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    font-weight: 500;
+    margin-bottom: var(--space-m);
+  }
+
+  .hero-title {
+    font-size: var(--step-4);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+  }
+
+  .hero-sep {
+    color: var(--color-accent);
+  }
+
+  .hero-headline {
+    font-size: var(--step-2);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin-top: var(--space-m);
+    max-width: 24ch;
+  }
+
+  .hero-intro {
+    font-size: var(--step-1);
+    color: var(--color-ink-soft);
+    max-width: 46ch;
+    margin-top: var(--space-m);
+    line-height: 1.55;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: var(--space-l);
+  }
+
+  .hero-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: var(--step--1);
+    color: var(--color-ink-faint);
+    margin-top: var(--space-xl);
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) var(--ring-strength, 18%), transparent);
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+import { getContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getContent(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="footer-mark">Helsys</span>
+      <span class="footer-tagline">{t.footer.tagline}</span>
+    </div>
+    <p class="footer-legal">
+      &copy; {year} Joris Helsen, Helsys. {t.footer.rights}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: var(--border);
+    padding-block: var(--space-xl);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-m);
+  }
+
+  .footer-brand {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  /* Same Cascadia Mono SemiBold wordmark as the header, for a consistent brand
+     mark. Same tracking and ligature suppression so the two read identically. */
+  .footer-mark {
+    font-family: var(--font-brand);
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-feature-settings: 'calt' 0, 'liga' 0, 'dlig' 0;
+    font-variant-ligatures: none;
+  }
+
+  .footer-tagline {
+    font-size: var(--step--1);
+    color: var(--color-ink-faint);
+  }
+
+  .footer-legal {
+    font-size: var(--step--1);
+    color: var(--color-ink-faint);
+  }
+</style>

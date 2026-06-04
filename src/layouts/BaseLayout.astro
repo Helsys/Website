@@ -1,0 +1,150 @@
+---
+import '../styles/global.css';
+import { getContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getContent(lang);
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const nlUrl = new URL('/', Astro.site).href;
+const enUrl = new URL('/en/', Astro.site).href;
+// PNG primary: many social scrapers do not render SVG og images.
+const ogImage = new URL('/og-image.png', Astro.site).href;
+---
+
+<!doctype html>
+<html lang={t.htmlLang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.metaTitle}</title>
+    <meta name="description" content={t.metaDescription} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- hreflang alternates for the two locales -->
+    <link rel="alternate" hreflang="nl" href={nlUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={nlUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={t.siteName} />
+    <meta property="og:title" content={t.metaTitle} />
+    <meta property="og:description" content={t.metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={t.ogLocale} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={t.metaTitle} />
+    <meta name="twitter:description" content={t.metaDescription} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Default to the dark ground; the inline script overrides to light only
+         when the visitor has explicitly chosen light. -->
+    <meta name="theme-color" content="#131316" />
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
+
+    <!-- Preload the single brand wordmark font (Cascadia Mono SemiBold, subset
+         to the six glyphs the wordmark uses, ~0.9KB). It is used high in the
+         layout (the header logo), so fetching it early keeps the swap
+         imperceptible. crossorigin is required for font preloads even when
+         same-origin. -->
+    <link
+      rel="preload"
+      href="/fonts/cascadia-mono-semibold-helsys.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Runs before first paint. Two jobs, both must beat the first paint:
+         1. Flag JS availability so reveal animations only apply when JS can
+            actually undo the hidden state. No FOUC, no trapped content.
+         2. Resolve and apply the colour theme by setting data-theme on <html>,
+            so there is never a flash of the wrong theme. Dark is the default
+            baseline: only an explicit stored choice of 'light' moves away from
+            it; the OS preference no longer decides. The meta theme-color is
+            synced too so the browser chrome matches. -->
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        try {
+          var stored = localStorage.getItem('theme');
+          // Dark is the baseline; only an explicit 'light' choice opts out.
+          var theme = stored === 'light' ? 'light' : 'dark';
+          root.setAttribute('data-theme', theme);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#131316' : '#f6f8f7');
+        } catch (e) {
+          /* If storage is blocked, the CSS :root default (dark) still applies. */
+        }
+      })();
+    </script>
+
+    <!-- JSON-LD structured data: a single Person, with the brand as an
+         affiliated organisation. Facts only. -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: 'Joris Helsen',
+        url: 'https://helsys.be',
+        jobTitle: lang === 'nl' ? 'Freelance software engineer' : 'Freelance software engineer',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Diepenbeek',
+          addressCountry: 'BE',
+        },
+        worksFor: {
+          '@type': 'Organization',
+          name: 'Helsys',
+          url: 'https://helsys.be',
+        },
+        sameAs: ['https://www.linkedin.com/in/jorishelsen/'],
+        knowsAbout: ['Odoo', 'Python', '.NET', 'Microsoft Azure'],
+      })}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.skipToContent}</a>
+    <slot />
+
+    <!-- Progressive scroll reveal. Tiny, deferred, and a no-op for users who
+         prefer reduced motion. -->
+    <script>
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const revealables = document.querySelectorAll('.reveal');
+
+      if (prefersReduced || !('IntersectionObserver' in window)) {
+        revealables.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                obs.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
+        );
+        revealables.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>
