@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { getContent, type Lang } from '../i18n/content';
+import SpeedInsights from '@vercel/speed-insights/astro';
 
 interface Props {
   lang: Lang;
@@ -146,5 +147,7 @@ const ogImage = new URL('/og-image.png', Astro.site).href;
         revealables.forEach((el) => io.observe(el));
       }
     </script>
+
+    <SpeedInsights />
   </body>
 </html>
