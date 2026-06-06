@@ -12,9 +12,12 @@ const t = getContent(lang);
 <section class="hero">
   <div class="container hero-inner">
     <p class="hero-eyebrow reveal">{t.hero.eyebrow}</p>
-    <h1 class="hero-title reveal" style="--reveal-delay: 0.05s">
-      {t.hero.name}<span class="hero-sep">.</span>
-    </h1>
+    <div class="hero-name-block">
+      <h1 class="hero-title reveal" style="--reveal-delay: 0.05s">
+        {t.hero.name}
+      </h1>
+      <span class="hero-keyline reveal" style="--reveal-delay: 0.08s" aria-hidden="true"></span>
+    </div>
     <p class="hero-headline reveal" style="--reveal-delay: 0.1s">{t.hero.headline}</p>
     <p class="hero-intro reveal" style="--reveal-delay: 0.15s">{t.hero.intro}</p>
 
@@ -37,18 +40,26 @@ const t = getContent(lang);
     overflow: hidden;
   }
 
-  /* A single, very soft radial glow. Restraint: it suggests depth without
-     ever competing with the type. */
+  /* Two very soft radial glows: the dominant teal on the left and a smaller,
+     warmer coral-amber pool on the right. Together they give the hero quiet
+     depth and a touch of energy without ever competing with the type. Teal
+     stays the larger, leading wash; the warm glow is the second voice. */
   .hero::before {
     content: '';
     position: absolute;
     inset: -20% -10% auto -10%;
     height: 60vh;
-    background: radial-gradient(
-      60% 60% at 30% 20%,
-      color-mix(in srgb, var(--color-accent) var(--glow-strength, 9%), transparent),
-      transparent 70%
-    );
+    background:
+      radial-gradient(
+        55% 60% at 78% 12%,
+        color-mix(in srgb, var(--color-warm) var(--warm-strength, 11%), transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        60% 60% at 30% 20%,
+        color-mix(in srgb, var(--color-accent) var(--glow-strength, 9%), transparent),
+        transparent 70%
+      );
     pointer-events: none;
     z-index: -1;
   }
@@ -72,8 +83,35 @@ const t = getContent(lang);
     letter-spacing: -0.035em;
   }
 
-  .hero-sep {
-    color: var(--color-accent);
+  /* The name block shrinks to the rendered width of the name (fit-content),
+     so the keyline below can take that exact width with width:100%. This makes
+     the line track the full name on every breakpoint (the name uses fluid
+     type) and stay left-aligned, without a hardcoded width that only covers
+     part of it. Should the name ever wrap on a narrow screen, fit-content
+     follows the widest line, so the keyline still spans the name block. */
+  .hero-name-block {
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  /* A fine accent keyline under the name: a warm->teal gradient (warm left,
+     teal right) that brings the two brand voices together in one quiet mark
+     and gives the hero a touch of rhythm. It now runs the full width of the
+     name; kept thin (2px) so a line this long stays elegant and never reads as
+     a heavy underline or personal-brand stripe. Both stops are WCAG-AA accent
+     values per theme, so neither voice drops out against the dark charcoal or
+     the light paper. Purely decorative, so the element is empty and aria-hidden. */
+  .hero-keyline {
+    display: block;
+    width: 100%;
+    height: 2px;
+    margin-top: var(--space-s);
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      var(--color-warm) 0%,
+      var(--color-accent) 100%
+    );
   }
 
   .hero-headline {
@@ -109,11 +147,12 @@ const t = getContent(lang);
     margin-top: var(--space-xl);
   }
 
+  /* Teal core with a warm-tinted ring: the two brand voices in one small mark. */
   .dot {
     width: 7px;
     height: 7px;
     border-radius: 50%;
     background: var(--color-accent);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) var(--ring-strength, 18%), transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-warm) var(--ring-strength, 18%), transparent);
   }
 </style>

@@ -94,8 +94,14 @@
   --color-accent-hover: #73d6db;
   --color-on-accent: #11151b;
   --color-on-inverse: #131316;
+  /* Warm secondary accent: a coral-amber that sits near teal's complement, the
+     lively second voice to the teal lead. Lifted to #f2a766 so it stays legible
+     on the dark ground (9.3:1 on bg, 8.5:1 on elevated, AA). Used sparingly. */
+  --color-warm: #f2a766;
   --glow-strength: 14%;
   --ring-strength: 24%;
+  /* Strength of the warm half of the teal->warm hero glow / accent lines. */
+  --warm-strength: 11%;
 }
 
 /* Light palette: a warm, faintly teal tinted paper (not near pure white) with
@@ -121,6 +127,10 @@
   --color-accent: #0a6b6e;
   --color-accent-hover: #064f52;
   --color-accent-soft: #0a6b6e;
+  /* Warm secondary accent on light: a deep coral-amber, darkened so it clears
+     WCAG AA as text/UI on every surface it appears on (5.0:1 on paper, 5.3:1 on
+     elevated, 4.8:1 on the teal tint). */
+  --color-warm: #a85320;
   /* Foreground that reads on the accent and on the inverted (ink) surface. */
   --color-on-accent: #f6f8f7;
   --color-on-inverse: #f6f8f7;
@@ -128,15 +138,20 @@
      teal glow and accent rings are actually visible on the paper. */
   --glow-strength: 12%;
   --ring-strength: 22%;
+  /* The warm half of the hero glow is a touch stronger on paper to register. */
+  --warm-strength: 13%;
 }
 
 /* Defaults for the surface/accent helpers that only the light palette defines,
-   so dark (the baseline) has safe fallbacks. On dark these resolve to the
-   existing elevated/line/accent values, leaving dark visually unchanged. */
+   so dark (the baseline) has safe fallbacks. surface-tint and accent-soft
+   resolve to the existing elevated/accent values, leaving those uses unchanged.
+   line-strong gets a real, slightly lifted dark hairline (#3a3a41 on the
+   elevated #1c1c20 ground): a fine keyline that lets cards and chips read as a
+   gently raised surface, mirroring how light uses --color-line-strong. */
 :root,
 :root[data-theme='dark'] {
   --color-surface-tint: var(--color-bg-elevated);
-  --color-line-strong: var(--color-line);
+  --color-line-strong: #3a3a41;
   --color-accent-soft: var(--color-accent);
 }
 
@@ -235,11 +250,14 @@ p {
   margin-bottom: var(--space-m);
 }
 
-/* In light, the small uppercase section labels carry the brand teal. It is a
-   tiny amount of ink, so this reads as a tasteful brand cue, not noise. On dark
-   the labels stay faint grey (the user is a fan of the dark palette as is). */
-:root[data-theme='light'] .section-label {
-  color: var(--color-accent);
+/* The numbered section labels ("01 - About" ...) carry the WARM accent in both
+   themes. It is a tiny amount of ink, so it reads as a lively, tasteful brand
+   cue rather than noise, and it gives the page a consistent warm anchor at the
+   top of every section. Teal remains the lead voice (wordmark dot, links, focus
+   ring, primary CTA). On dark this also lifts the labels off the old faint grey,
+   which is where the page read a touch flat. */
+.section-label {
+  color: var(--color-warm);
 }
 
 /* ---- Accessibility helpers --------------------------------------------- */

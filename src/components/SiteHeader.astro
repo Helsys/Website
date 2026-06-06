@@ -11,11 +11,29 @@ const t = getContent(lang);
 
 <header class="site-header">
   <div class="container header-inner">
+    <button
+      class="nav-toggle"
+      type="button"
+      data-nav-toggle
+      aria-controls="primary-nav"
+      aria-expanded="false"
+      aria-label={lang === 'nl' ? 'Menu openen' : 'Open menu'}
+      data-label-open={lang === 'nl' ? 'Menu openen' : 'Open menu'}
+      data-label-close={lang === 'nl' ? 'Menu sluiten' : 'Close menu'}
+    >
+      <svg class="icon-burger" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <path d="M3.5 7h17M3.5 12h17M3.5 17h17"></path>
+      </svg>
+      <svg class="icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18"></path>
+      </svg>
+    </button>
+
     <a class="brand" href={lang === 'nl' ? '/' : '/en/'} aria-label={t.siteName}>
       <span class="brand-mark">Helsys<span class="brand-dot" aria-hidden="true">.</span></span>
     </a>
 
-    <nav class="nav" aria-label={lang === 'nl' ? 'Hoofdnavigatie' : 'Main navigation'}>
+    <nav id="primary-nav" class="nav" aria-label={lang === 'nl' ? 'Hoofdnavigatie' : 'Main navigation'}>
       <a href="#about">{t.nav.about}</a>
       <a href="#services">{t.nav.services}</a>
       <a href="#certifications">{t.nav.certifications}</a>
@@ -90,6 +108,42 @@ const t = getContent(lang);
       syncToggle(next);
     });
   }
+
+  // Mobile navigation. Below the tablet breakpoint the nav is a dropdown panel
+  // toggled by the burger button; at >=48rem CSS forces it open inline and the
+  // burger is hidden, so this state is a no-op there. Progressive enhancement:
+  // without JS the nav links stay visible (CSS default), so the menu is never
+  // trapped.
+  const navToggle = document.querySelector('[data-nav-toggle]');
+  const header = document.querySelector('.site-header');
+
+  function setNavOpen(open: boolean) {
+    if (!navToggle || !header) return;
+    header.classList.toggle('nav-open', open);
+    navToggle.setAttribute('aria-expanded', String(open));
+    const label = open ? navToggle.getAttribute('data-label-close') : navToggle.getAttribute('data-label-open');
+    if (label) {
+      navToggle.setAttribute('aria-label', label);
+      navToggle.setAttribute('title', label);
+    }
+  }
+
+  if (navToggle && header) {
+    navToggle.addEventListener('click', () => {
+      setNavOpen(!header.classList.contains('nav-open'));
+    });
+    // Tapping a nav link closes the menu (it is an in-page jump).
+    header.querySelectorAll('.nav a').forEach((link) => {
+      link.addEventListener('click', () => setNavOpen(false));
+    });
+    // Escape closes and returns focus to the toggle.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && header.classList.contains('nav-open')) {
+        setNavOpen(false);
+        (navToggle as HTMLElement).focus();
+      }
+    });
+  }
 </script>
 
 <style>
@@ -106,9 +160,17 @@ const t = getContent(lang);
   .header-inner {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-m);
     min-height: 4.25rem;
+  }
+
+  /* The brand sits directly next to whatever precedes it (the burger on
+     mobile) and pushes everything after it (nav and/or header actions) to the
+     far right. This keeps one rule working for both layouts: on mobile the row
+     is [burger] [brand] ........ [actions], and at >=48rem (burger hidden, nav
+     inline) it is [brand] ........ [nav] [actions], matching the original. */
+  .brand {
+    margin-right: auto;
   }
 
   /* Wordmark. Set in Cascadia Mono SemiBold via --font-brand (self-hosted,
@@ -136,16 +198,47 @@ const t = getContent(lang);
     color: var(--color-accent);
   }
 
+  /* Mobile (default): the nav is a dropdown panel below the sticky bar. It is
+     collapsed by default and revealed when the header carries .nav-open (set by
+     the burger button). Anchored absolutely so opening it never shifts the page.
+     At >=48rem the media query at the bottom turns it back into the inline row
+     and the burger is hidden. */
   .nav {
-    display: none;
-    gap: clamp(1.25rem, 3vw, 2.5rem);
-    font-size: var(--step--1);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: grid;
+    gap: var(--space-2xs);
+    padding: var(--space-xs) clamp(1.25rem, 5vw, 3rem) var(--space-m);
+    font-size: var(--step-1);
     color: var(--color-ink-soft);
+    /* Near-solid panel so the links never compete with the hero text bleeding
+       through; the blur is a fallback for the sliver of translucency that
+       remains. */
+    background-color: var(--color-bg);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.7);
+    border-bottom: 1px solid var(--color-line);
+    /* Collapsed state: hidden from view and from the tab order. */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.5rem);
+    transition: opacity 0.22s var(--ease-out), transform 0.22s var(--ease-out),
+      visibility 0.22s var(--ease-out);
+  }
+
+  .site-header.nav-open .nav {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
   }
 
   .nav a {
     position: relative;
-    padding-block: 0.25rem;
+    width: fit-content;
+    padding-block: 0.6rem;
     transition: color 0.2s var(--ease-out);
   }
 
@@ -187,10 +280,13 @@ const t = getContent(lang);
   }
 
   .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
     font-size: var(--step--1);
     font-weight: 500;
     color: var(--color-ink-soft);
-    padding: 0.35rem 0.85rem;
+    padding: 0.35rem 0.95rem;
     border: 1px solid var(--color-line);
     border-radius: 999px;
     transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
@@ -212,8 +308,8 @@ const t = getContent(lang);
   .theme-toggle {
     display: inline-grid;
     place-items: center;
-    width: 2.3rem;
-    height: 2.3rem;
+    width: 2.75rem;
+    height: 2.75rem;
     padding: 0;
     color: var(--color-ink-soft);
     background: transparent;
@@ -227,6 +323,49 @@ const t = getContent(lang);
   .theme-toggle:hover {
     color: var(--color-ink);
     border-color: var(--color-ink);
+  }
+
+  /* Burger button: mobile only. Same pill footprint as the theme toggle, a
+     44x44 tap target. Shows the burger when collapsed and an X when the menu is
+     open; the icon swap is driven by .site-header.nav-open. */
+  .nav-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    color: var(--color-ink-soft);
+    background: transparent;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+  }
+
+  .nav-toggle:hover {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  :global(html[data-theme='light']) .nav-toggle:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .nav-toggle svg {
+    grid-area: 1 / 1;
+  }
+
+  .nav-toggle .icon-close {
+    display: none;
+  }
+
+  .site-header.nav-open .nav-toggle .icon-burger {
+    display: none;
+  }
+
+  .site-header.nav-open .nav-toggle .icon-close {
+    display: block;
   }
 
   /* The two icons share the same cell; only one shows per theme. The moon
@@ -255,8 +394,29 @@ const t = getContent(lang);
   }
 
   @media (min-width: 48rem) {
+    /* Tablet and up: the nav returns to its inline row and the burger is gone.
+       Reset every mobile-panel property so it reads as the original header. */
     .nav {
+      position: static;
       display: flex;
+      gap: clamp(1.25rem, 3vw, 2.5rem);
+      padding: 0;
+      font-size: var(--step--1);
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-bottom: none;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+
+    .nav a {
+      padding-block: 0.25rem;
+    }
+
+    .nav-toggle {
+      display: none;
     }
   }
 </style>

@@ -80,6 +80,9 @@ const t = getContent(lang);
     font-weight: 500;
     color: var(--color-ink);
     width: fit-content;
+    /* A touch of vertical padding so the link is a comfortable tap target on
+       touch devices without enlarging the visible underline. */
+    padding-block: 0.35rem;
     border-bottom: 1px solid transparent;
     transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
   }

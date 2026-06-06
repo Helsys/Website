@@ -7,26 +7,59 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = getContent(lang);
+const c = t.certifications;
+
+// The optimized scan lives in public/ (the docs/ folder is a working folder and
+// is never referenced from the built site).
+const certImage = '/odoo-certificate.jpg';
 ---
 
 <section id="certifications" class="section certifications" aria-labelledby="cert-title">
   <div class="container">
-    <p class="section-label reveal">{t.certifications.sectionLabel}</p>
-    <h2 id="cert-title" class="cert-title reveal">{t.certifications.title}</h2>
-    <p class="cert-intro reveal" style="--reveal-delay: 0.05s">{t.certifications.intro}</p>
+    <p class="section-label reveal">{c.sectionLabel}</p>
+    <h2 id="cert-title" class="cert-title reveal">{c.title}</h2>
+    <p class="cert-intro reveal" style="--reveal-delay: 0.05s">{c.intro}</p>
 
-    <ul class="cert-list" role="list">
-      {t.certifications.items.map((item, i) => (
-        <li class="cert-card reveal" style={`--reveal-delay: ${i * 0.06}s`}>
-          <div class="cert-top">
-            <span class="cert-issuer">{item.issuer}</span>
-            <span class="cert-year">{item.year}</span>
-          </div>
-          <p class="cert-name">{item.name}</p>
-        </li>
-      ))}
-    </ul>
+    <div class="cert-badge-wrap reveal" style="--reveal-delay: 0.1s">
+      <!-- The badge is the trigger. As an <a href> it opens the scan directly
+           without JS; the inline script below upgrades it to an accessible
+           dialog. -->
+      <a
+        href={certImage}
+        class="cert-badge"
+        data-cert-trigger
+        aria-haspopup="dialog"
+      >
+        <span class="cert-badge-mark" aria-hidden="true">o</span>
+        <span class="cert-badge-text">
+          <span class="cert-badge-issuer">{c.badge.issuer}</span>
+          <span class="cert-badge-name">{c.badge.name}</span>
+          <span class="cert-badge-meta">{c.badge.year} · {c.badge.certNo}</span>
+        </span>
+        <span class="cert-badge-cta">
+          {c.proofLabel}
+          <svg class="cert-badge-icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </a>
+    </div>
   </div>
+
+  <!-- Native <dialog>: built-in focus trapping, Escape to close and inert
+       background. Hidden until JS opens it; the badge link is the no-JS path. -->
+  <dialog class="cert-dialog" data-cert-dialog aria-label={c.modalTitle}>
+    <div class="cert-dialog-inner">
+      <button type="button" class="cert-dialog-close" data-cert-close aria-label={c.modalClose}>
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+          <path d="M5 5l10 10M15 5L5 15" fill="none" stroke="currentColor" stroke-width="1.6"
+            stroke-linecap="round" />
+        </svg>
+      </button>
+      <img class="cert-dialog-img" src={certImage} alt={c.proofAlt} width="1280" height="906" />
+    </div>
+  </dialog>
 </section>
 
 <style>
@@ -42,53 +75,66 @@ const t = getContent(lang);
     margin-bottom: var(--space-xl);
   }
 
-  .cert-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: var(--space-m);
-    grid-template-columns: 1fr;
+  /* ---- Badge ------------------------------------------------------------ */
+  .cert-badge-wrap {
+    max-width: 32rem;
   }
 
-  .cert-card {
+  .cert-badge {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-m);
     padding: var(--space-l);
     border: var(--border);
     border-radius: var(--radius);
     background: var(--color-bg-elevated);
+    text-decoration: none;
+    color: inherit;
     transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out),
       border-color 0.35s var(--ease-out);
   }
 
-  .cert-card:hover {
+  .cert-badge:hover {
     transform: translateY(-3px);
     border-color: color-mix(in srgb, var(--color-accent) 35%, var(--color-line));
-    box-shadow: 0 14px 40px -24px rgba(22, 23, 26, 0.35);
+    box-shadow: 0 14px 40px -24px color-mix(in srgb, var(--color-warm) 22%, rgba(0, 0, 0, 0.5));
   }
 
-  /* Light: cards sit on a soft teal tinted paper with a teal hairline, and a
-     thin teal keyline on the left marks them as branded surfaces. The hover
-     shadow picks up a teal cast. Dark cards are unchanged. */
-  :global(html[data-theme='light']) .cert-card {
+  /* Light: branded surface, mirroring the rest of the site. */
+  :global(html[data-theme='light']) .cert-badge {
     background: var(--color-surface-tint);
     border-color: var(--color-line-strong);
     border-left: 2px solid var(--color-accent);
   }
 
-  :global(html[data-theme='light']) .cert-card:hover {
+  :global(html[data-theme='light']) .cert-badge:hover {
     border-color: var(--color-accent);
     box-shadow: 0 16px 44px -24px color-mix(in srgb, var(--color-accent) 55%, transparent);
   }
 
-  .cert-top {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-s);
-    margin-bottom: var(--space-s);
+  /* A small Odoo "o" set in the accent: a quiet nod to the brand, not a logo. */
+  .cert-badge-mark {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    border: 2px solid var(--color-accent);
+    color: var(--color-accent);
+    font-size: var(--step-2);
+    font-weight: 700;
+    line-height: 1;
   }
 
-  .cert-issuer {
+  .cert-badge-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .cert-badge-issuer {
     font-size: var(--step--1);
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -96,22 +142,136 @@ const t = getContent(lang);
     font-weight: 600;
   }
 
-  .cert-year {
-    font-size: var(--step--1);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-ink-faint);
-  }
-
-  .cert-name {
+  .cert-badge-name {
     font-size: var(--step-1);
     font-weight: 500;
     letter-spacing: -0.015em;
     line-height: 1.3;
   }
 
-  @media (min-width: 40rem) {
-    .cert-list {
-      grid-template-columns: repeat(2, 1fr);
+  .cert-badge-meta {
+    font-size: var(--step--1);
+    color: var(--color-ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cert-badge-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    white-space: nowrap;
+  }
+
+  .cert-badge-icon {
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  .cert-badge:hover .cert-badge-cta {
+    color: var(--color-accent);
+  }
+
+  /* The arrow nudges right and warms up on hover: a small lively detail against
+     the teal badge text, so the call to action feels energetic. */
+  .cert-badge:hover .cert-badge-icon {
+    transform: translateX(3px);
+    color: var(--color-warm);
+  }
+
+  /* On narrow screens the CTA drops below the text for breathing room. */
+  @media (max-width: 30rem) {
+    .cert-badge {
+      grid-template-columns: auto 1fr;
+    }
+    .cert-badge-cta {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ---- Dialog ----------------------------------------------------------- */
+  .cert-dialog {
+    border: none;
+    background: transparent;
+    padding: 0;
+    max-width: min(92vw, 60rem);
+    max-height: 92vh;
+    color: var(--color-ink);
+  }
+
+  .cert-dialog::backdrop {
+    background: rgba(8, 9, 11, 0.72);
+    backdrop-filter: blur(2px);
+  }
+
+  .cert-dialog-inner {
+    position: relative;
+  }
+
+  .cert-dialog-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
+  }
+
+  .cert-dialog-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: var(--color-bg-elevated);
+    color: var(--color-ink);
+    box-shadow: 0 4px 16px -6px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+  }
+
+  .cert-dialog-close:hover {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    transform: scale(1.05);
+  }
+
+  /* Gentle entrance; suppressed under reduced-motion via the global rule that
+     zeroes all animation/transition durations. */
+  .cert-dialog[open] {
+    animation: cert-dialog-in 0.3s var(--ease-out);
+  }
+
+  @keyframes cert-dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
     }
   }
 </style>
+
+<script>
+  // Progressive enhancement: turn the badge link into an accessible lightbox.
+  // Without JS the link simply opens the scan image, so the proof is always
+  // reachable. <dialog> gives us focus trapping, Escape-to-close and an inert
+  // background for free.
+  const trigger = document.querySelector<HTMLAnchorElement>('[data-cert-trigger]');
+  const dialog = document.querySelector<HTMLDialogElement>('[data-cert-dialog]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-cert-close]');
+
+  if (trigger && dialog && typeof dialog.showModal === 'function') {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      dialog.showModal();
+    });
+    closeBtn?.addEventListener('click', () => dialog.close());
+    // Click on the backdrop (outside the image) closes the dialog.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  }
+</script>

@@ -73,23 +73,75 @@ const t = getContent(lang);
     border-bottom: var(--border);
   }
 
+  /* Dark: lift the cards onto the same gently raised surface as the cert badge,
+     so they read as discrete, premium panels instead of melting into the
+     charcoal ground (where the bare top/bottom rules left them flat). Each card
+     gets the elevated background, the fine lifted keyline (--color-line-strong),
+     a rounded edge and a soft shadow. The list gains spacing so the panels
+     breathe; the per-row top/bottom rules are dropped (the card border replaces
+     them). overflow:hidden keeps the warm hover keyline tucked into the rounded
+     corner. Light is untouched (stays the borderless rows with the tint hover). */
+  :global(html[data-theme='dark']) .services-list {
+    gap: var(--space-s);
+  }
+
+  :global(html[data-theme='dark']) .service-card,
+  :global(html[data-theme='dark']) .service-card:last-child {
+    padding: var(--space-l);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius);
+    background: var(--color-bg-elevated);
+    overflow: hidden;
+    box-shadow: 0 2px 6px -3px rgba(0, 0, 0, 0.55);
+    transition: background-color 0.3s var(--ease-out),
+      border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  }
+
+  /* A whisper of lift on hover, echoing the cert badge's elevated feel, while
+     the warm left keyline (the ::before) keeps wiping in on top. */
+  :global(html[data-theme='dark']) .service-card:hover {
+    border-color: color-mix(in srgb, var(--color-warm) 30%, var(--color-line-strong));
+    box-shadow: 0 10px 30px -20px rgba(0, 0, 0, 0.7);
+  }
+
+  /* The numbered index carries the warm accent in both themes, so the list of
+     services reads as a lively, branded sequence: this is the warm voice's most
+     visible home. Teal stays the lead elsewhere (section label, links). */
   .service-index {
     font-size: var(--step--1);
     font-variant-numeric: tabular-nums;
-    color: var(--color-ink-faint);
-    font-weight: 500;
-    padding-top: 0.4rem;
-  }
-
-  /* In light the index numerals take the brand teal, so the list reads as a
-     branded sequence. Dark keeps its faint grey numerals unchanged. */
-  :global(html[data-theme='light']) .service-index {
-    color: var(--color-accent);
+    color: var(--color-warm);
     font-weight: 600;
+    padding-top: 0.4rem;
+    /* Nudge right so the 2px warm keyline on the card's left edge (the ::before
+       hover line, anchored at left:0) never runs across the digit. */
+    padding-left: 0.5rem;
   }
 
-  /* A whisper of teal wash on hover, light only, to make the row feel alive
+  /* A whisper of teal wash on hover (light) plus a warm keyline that wipes in
+     on the left edge in both themes, so each row feels alive on interaction
      without a heavy hover state. */
+  .service-card {
+    position: relative;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-warm);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .service-card:hover::before {
+    transform: scaleY(1);
+  }
+
   :global(html[data-theme='light']) .service-card:hover {
     background-color: var(--color-surface-tint);
   }
@@ -143,13 +195,28 @@ const t = getContent(lang);
   }
 
   /* Light: soft teal tinted chips with a teal hairline, so the tech stack reads
-     as a cluster of brand tokens. Dark stays on its neutral elevated surface. */
+     as a cluster of brand tokens. */
   :global(html[data-theme='light']) .tech-item {
     background: var(--color-surface-tint);
     border-color: var(--color-line-strong);
   }
 
   :global(html[data-theme='light']) .tech-item:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  /* Dark: give the chips the same gently raised surface as light, tuned to the
+     charcoal ground. The elevated background already lifts them off the section;
+     the stronger hairline (--color-line-strong, a real lifted dark line here)
+     plus a soft shadow make each chip read as a discrete, premium token instead
+     of melting into the page. Mirrors the cert badge's elevated-surface family. */
+  :global(html[data-theme='dark']) .tech-item {
+    border-color: var(--color-line-strong);
+    box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.5);
+  }
+
+  :global(html[data-theme='dark']) .tech-item:hover {
     color: var(--color-accent);
     border-color: var(--color-accent);
   }
