@@ -1,9 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/static';
+import vercel from '@astrojs/vercel';
 
 // Production domain. Used for canonical URLs, sitemap and Open Graph.
-const SITE = 'https://helsys.be';
+const SITE = 'https://www.helsys.be';
 
 export default defineConfig({
   site: SITE,
