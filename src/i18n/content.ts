@@ -123,7 +123,7 @@ const nl: Content = {
     name: 'Joris Helsen',
     headline: 'Ik help KMO’s digitaliseren.',
     intro:
-      'Freelance software engineer met ruim twintig jaar ervaring. Ik vertaal bedrijfsprocessen naar werkende software, met Odoo als kloppend hart.',
+      'Freelance software engineer met ruim twintig jaar ervaring. Ik vertaal bedrijfsprocessen naar goed werkende software.',
     ctaPrimary: 'Neem contact op',
     ctaSecondary: 'Bekijk diensten',
     location: 'Diepenbeek, Belgie',
@@ -133,9 +133,9 @@ const nl: Content = {
     sectionLabel: '01 — Over mij',
     title: 'Twintig jaar IT en nog steeds alive and kicking :-)',
     paragraphs: [
-      'Ruim twintig jaar bouw ik software. De eerste jaren in loondienst, bij ondernemingen klein en groot, waar ik leerde robuuste systemen te bouwen die jarenlang meegaan.',
-      'Sinds 2022 werk ik als freelancer. Ik help KMO’s digitaliseren, vaak met Odoo. Geen technologie om de technologie, maar oplossingen die je dagelijkse werk beter maken.',
-      'Ik bied toegevoegde waarde zonder het nodeloos complex te maken: bewust eenvoudig, met je prioriteiten en data hygiëne voorop, want een systeem is maar zo betrouwbaar als de gegevens erin. AI-tools zet ik daarbij pragmatisch in als hefboom, voor sneller een werkende oplossing met minder gedoe. Zo krijg je het tempo en de scherpte van moderne tooling, zonder de complexiteit die er vaak bij hoort.',
+      'Ruim twintig jaar bouw ik robuuste software. De eerste jaren in loondienst, sinds 2022 als freelancer. Ik ondersteun KMO’s om mee te zijn op de digitale sneltrein. Geen technologie om de technologie, maar oplossingen die de dagelijkse werking efficiënter en beter maken.',
+      'Ik bied toegevoegde waarde zonder het nodeloos complex te maken. Bewust eenvoudig, met aandacht voor de juiste prioriteiten en een betoog voor data hygiëne. Want zelfs het beste systeem kan chaotisch aanvoelen als er geen aandacht wordt besteed aan de correctheid en op orde houden van de gegevens.',
+      'AI-tools zet ik daarbij pragmatisch in als hefboom. Zo krijg je het tempo en de scherpte van moderne tooling, zonder een overhead aan onnodige complexiteit.',
     ],
   },
 
@@ -143,7 +143,7 @@ const nl: Content = {
     sectionLabel: '02 — Diensten',
     title: 'Wat ik voor je doe.',
     intro:
-      'Ik implementeer Odoo van A tot Z. Vaak komt hier naast het technische luik ook een proces van change management aan te pas. Daarnaast bouw ik maatsoftware die kan praten met Odoo maar er ook echt goed uit ziet. Zoals een klantenportaal of een corporate website. Waar het loont, zet ik AI-tools in om sneller en slimmer tot een oplossing te komen.',
+      'Ik implementeer Odoo van A tot Z. Vaak komt hier naast het technische luik ook een proces van change management aan te pas. Daarnaast bouw ik maatsoftware, al dan niet gekoppeld aan Odoo, en die er ook echt goed uit ziet. Modern, fris, stijlvol. Denk hierbij bijvoorbeeld aan een klantenportaal, een corporate website of een mobile app.',
     items: [
       {
         title: 'Digitalisering van bedrijfsprocessen',
@@ -161,15 +161,15 @@ const nl: Content = {
           'Op maat gebouwde software en integraties op een fundament van solide engineering.',
       },
     ],
-    techLabel: 'Kerntechnologieen',
-    tech: ['Odoo', 'Python', 'AI', 'Postgres', 'SQL', '.NET', 'React'],
+    techLabel: 'Waarmee ik werk',
+    tech: ['Odoo', 'Python', '.NET', 'SQL', 'Postgres', 'React', 'Next.js', 'TypeScript', 'AI'],
   },
 
   certifications: {
     sectionLabel: '03 — Certificaten',
     title: 'Aantoonbaar onderlegd.',
     intro:
-      'Officieel gecertificeerd door Odoo S.A. Het bewijs ligt klaar, een klik op de badge toont het certificaat.',
+      'Uit interesse en uit voldoening ben ik constant bezig om mezelf bij te scholen. Dit leidde tot een aantal resultaatstukken met als meest recente het officiële certificaat van Odoo S.A. (klik op de badge)',
     badge: {
       issuer: 'Odoo',
       name: 'Odoo 19 Functional Certified',
@@ -187,7 +187,7 @@ const nl: Content = {
     sectionLabel: '04 — Contact',
     title: 'Laten we kennismaken.',
     intro:
-      'Een vraag, een idee of een project dat klaarligt? Stuur gerust een bericht. Ik antwoord persoonlijk.',
+      'Een vraag, een idee of een project dat klaarligt?\nStuur me gerust een bericht.',
     emailLabel: 'E-mail',
     email: EMAIL,
     linkedinLabel: 'LinkedIn',
@@ -231,7 +231,7 @@ const en: Content = {
     name: 'Joris Helsen',
     headline: 'I help SMEs go digital.',
     intro:
-      'Freelance software engineer with over twenty years of experience. I turn business processes into working software, with Odoo at the heart of it.',
+      'Freelance software engineer with over twenty years of experience. I turn business processes into software that just works.',
     ctaPrimary: 'Get in touch',
     ctaSecondary: 'See services',
     location: 'Diepenbeek, Belgium',
@@ -241,9 +241,9 @@ const en: Content = {
     sectionLabel: '01 — About',
     title: 'Twenty years in IT and still alive and kicking :-)',
     paragraphs: [
-      'I have been building software for over twenty years. The first years were in employment, for companies large and small, where I learned to build robust systems that last.',
-      'Since 2022 I work as a freelancer. I help SMEs go digital, often with Odoo. Not technology for its own sake, but solutions that make your daily work better.',
-      'I add value without making things needlessly complex: deliberately simple, with your priorities and data hygiene up front, because a system is only as reliable as the data that goes into it. AI tools I apply pragmatically as a lever, for a working solution faster and with less hassle. That way you gain the pace and sharpness of modern tooling, without the complexity that usually comes with it.',
+      'For over twenty years I have been building robust software. The first years in employment, since 2022 as a freelancer. I help SMEs keep pace with the digital fast lane. Not technology for its own sake, but solutions that make day to day operations more efficient and better.',
+      'I add value without making things needlessly complex. Deliberately simple, with an eye for the right priorities and a case for data hygiene. Because even the best system can feel chaotic if no attention is paid to keeping the data correct and in order.',
+      'AI tools I bring in pragmatically as a lever. That way you gain the pace and sharpness of modern tooling, without an overhead of needless complexity.',
     ],
   },
 
@@ -251,7 +251,7 @@ const en: Content = {
     sectionLabel: '02 — Services',
     title: 'What I do for you.',
     intro:
-      'I implement Odoo from A to Z. On top of the technical side, this usually comes with a process of change management. I also build custom software that talks to Odoo and genuinely looks the part, like a customer portal or a corporate website. Where it pays off, I bring in AI tools to reach a solution faster and smarter.',
+      'I implement Odoo from A to Z. On top of the technical side, this usually comes with a process of change management. I also build custom software, whether or not connected to Odoo, that genuinely looks the part too. Modern, fresh, stylish. Think of a customer portal, a corporate website or a mobile app.',
     items: [
       {
         title: 'Digitalising business processes',
@@ -269,15 +269,15 @@ const en: Content = {
           'Tailor made software and integrations on a foundation of solid engineering.',
       },
     ],
-    techLabel: 'Core technologies',
-    tech: ['Odoo', 'Python', 'AI', 'Postgres', 'SQL', '.NET', 'React'],
+    techLabel: 'What I work with',
+    tech: ['Odoo', 'Python', '.NET', 'SQL', 'Postgres', 'React', 'Next.js', 'TypeScript', 'AI'],
   },
 
   certifications: {
     sectionLabel: '03 — Certifications',
     title: 'Demonstrably qualified.',
     intro:
-      'Officially certified by Odoo S.A. The proof is ready, one click on the badge shows the certificate.',
+      'Out of genuine interest and the satisfaction it brings, I keep training myself. That has led to a number of milestones, the most recent being the official certificate from Odoo S.A. (click the badge)',
     badge: {
       issuer: 'Odoo',
       name: 'Odoo 19 Functional Certified',
@@ -295,7 +295,7 @@ const en: Content = {
     sectionLabel: '04 — Contact',
     title: 'Let us get acquainted.',
     intro:
-      'A question, an idea or a project ready to go? Feel free to send a message. I reply personally.',
+      'A question, an idea or a project ready to go?\nFeel free to drop me a message.',
     emailLabel: 'Email',
     email: EMAIL,
     linkedinLabel: 'LinkedIn',

@@ -160,16 +160,43 @@ const t = getContent(lang);
     line-height: 1.6;
   }
 
+  /* The tech stack answers "with what", a different register than the three
+     service cards ("what I do for you"). It is bound to the Diensten section as
+     one demarcated block: the same raised surface family as the cards/chips
+     (--color-surface-tint + --color-line-strong keyline + --radius), so it
+     clearly belongs here, while a short warm keyline on its left edge (echoing
+     the warm service numbers and card hover keyline) ties it to the section
+     without turning it into a fourth card. */
   .tech {
     margin-top: var(--space-xl);
+    position: relative;
+    padding: var(--space-l);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius);
+    background: var(--color-surface-tint);
+    overflow: hidden;
   }
 
+  /* The warm keyline that binds the block to the section's accent voice. */
+  .tech::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-warm);
+  }
+
+  /* The label reads as an eyebrow (uppercase, tracked, warm), the same register
+     as the numbered section labels, so the block is recognisable as a heading
+     of its own and not another card title. */
   .tech-label {
     font-size: var(--step--1);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-ink-faint);
-    font-weight: 500;
+    color: var(--color-warm);
+    font-weight: 600;
     margin-bottom: var(--space-s);
   }
 
@@ -194,10 +221,10 @@ const t = getContent(lang);
       background-color 0.2s var(--ease-out);
   }
 
-  /* Light: soft teal tinted chips with a teal hairline, so the tech stack reads
-     as a cluster of brand tokens. */
+  /* Light: the chips now sit inside the surface-tint block, so they take the
+     lighter elevated ground to stand off the block instead of matching it. */
   :global(html[data-theme='light']) .tech-item {
-    background: var(--color-surface-tint);
+    background: var(--color-bg-elevated);
     border-color: var(--color-line-strong);
   }
 
@@ -212,6 +239,9 @@ const t = getContent(lang);
      plus a soft shadow make each chip read as a discrete, premium token instead
      of melting into the page. Mirrors the cert badge's elevated-surface family. */
   :global(html[data-theme='dark']) .tech-item {
+    /* Inside the elevated block, drop the chip to the section ground so it reads
+       as a discrete token against the block instead of matching its surface. */
+    background: var(--color-bg);
     border-color: var(--color-line-strong);
     box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.5);
   }
